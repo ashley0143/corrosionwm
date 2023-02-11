@@ -2,7 +2,6 @@ use smithay::{
     delegate_xdg_shell, delegate_xdg_decoration,
     desktop::{Space, Window},
     input::{
-        keyboard::{keysyms as xkb, FilterResult},
         pointer::{Focus, GrabStartData as PointerGrabStartData},
         Seat,
     },
