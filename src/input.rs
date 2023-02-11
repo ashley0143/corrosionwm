@@ -4,14 +4,14 @@ use smithay::{
         KeyboardKeyEvent, PointerAxisEvent, PointerButtonEvent,
     },
     input::{
-        keyboard::FilterResult,
-        pointer::{AxisFrame, ButtonEvent, MotionEvent},
+        keyboard::{FilterResult},
+        pointer::{AxisFrame, ButtonEvent, MotionEvent, GrabStartData, Focus},
     },
     reexports::wayland_server::protocol::wl_surface::WlSurface,
     utils::SERIAL_COUNTER,
 };
 
-use crate::state::Corrosion;
+use crate::{state::Corrosion, grabs::MoveSurfaceGrab};
 
 impl Corrosion {
     pub fn process_input_event<I: InputBackend>(&mut self, event: InputEvent<I>) {
@@ -74,6 +74,26 @@ impl Corrosion {
                         self.space.elements().for_each(|window| {
                             window.toplevel().send_configure();
                         });
+
+                        // Check for compositor initiated move grab
+                        if self.seat.get_keyboard().unwrap().modifier_state().logo {
+                            let start_data = GrabStartData {
+                                focus: None,
+                                button,
+                                location: pointer.current_location(),
+                            };
+
+                            let initial_window_location =
+                                        self.space.element_location(&window).unwrap();
+
+                            let grab = MoveSurfaceGrab {
+                                start_data,
+                                window,
+                                initial_window_location,
+                            };
+
+                            pointer.set_grab(self, grab, serial, Focus::Clear);
+                        };
                     } else {
                         self.space.elements().for_each(|window| {
                             window.set_activated(false);
@@ -81,6 +101,7 @@ impl Corrosion {
                         });
                         keyboard.set_focus(self, Option::<WlSurface>::None, serial);
                     }
+
                 };
 
                 pointer.button(
