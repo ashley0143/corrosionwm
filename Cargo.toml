@@ -1,0 +1,17 @@
+[package]
+name = "corrosionwm"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+smithay = "0.3.0"
+slog = "2.7.0"
+slog-term = "2.9.0"
+slog-async = "2.7.0"
+slog-stdlog = "4.1.1"
+slog-scope = "4.4.0"
+xcursor = "0.3.4"
+image = "0.24.5"
+renderdoc = "0.10.1"
