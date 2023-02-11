@@ -1,4 +1,4 @@
-use crate::Smallvil;
+use crate::Corrosion;
 use smithay::{
     desktop::{Space, Window},
     input::pointer::{
@@ -36,7 +36,7 @@ impl From<xdg_toplevel::ResizeEdge> for ResizeEdge {
 }
 
 pub struct ResizeSurfaceGrab {
-    start_data: PointerGrabStartData<Smallvil>,
+    start_data: PointerGrabStartData<Corrosion>,
     window: Window,
 
     edges: ResizeEdge,
@@ -47,7 +47,7 @@ pub struct ResizeSurfaceGrab {
 
 impl ResizeSurfaceGrab {
     pub fn start(
-        start_data: PointerGrabStartData<Smallvil>,
+        start_data: PointerGrabStartData<Corrosion>,
         window: Window,
         edges: ResizeEdge,
         initial_window_rect: Rectangle<i32, Logical>,
@@ -68,11 +68,11 @@ impl ResizeSurfaceGrab {
     }
 }
 
-impl PointerGrab<Smallvil> for ResizeSurfaceGrab {
+impl PointerGrab<Corrosion> for ResizeSurfaceGrab {
     fn motion(
         &mut self,
-        data: &mut Smallvil,
-        handle: &mut PointerInnerHandle<'_, Smallvil>,
+        data: &mut Corrosion,
+        handle: &mut PointerInnerHandle<'_, Corrosion>,
         _focus: Option<(WlSurface, Point<i32, Logical>)>,
         event: &MotionEvent,
     ) {
@@ -127,8 +127,8 @@ impl PointerGrab<Smallvil> for ResizeSurfaceGrab {
 
     fn relative_motion(
         &mut self,
-        data: &mut Smallvil,
-        handle: &mut PointerInnerHandle<'_, Smallvil>,
+        data: &mut Corrosion,
+        handle: &mut PointerInnerHandle<'_, Corrosion>,
         focus: Option<(WlSurface, Point<i32, Logical>)>,
         event: &RelativeMotionEvent,
     ) {
@@ -137,8 +137,8 @@ impl PointerGrab<Smallvil> for ResizeSurfaceGrab {
 
     fn button(
         &mut self,
-        data: &mut Smallvil,
-        handle: &mut PointerInnerHandle<'_, Smallvil>,
+        data: &mut Corrosion,
+        handle: &mut PointerInnerHandle<'_, Corrosion>,
         event: &ButtonEvent,
     ) {
         handle.button(data, event);
@@ -170,14 +170,14 @@ impl PointerGrab<Smallvil> for ResizeSurfaceGrab {
 
     fn axis(
         &mut self,
-        data: &mut Smallvil,
-        handle: &mut PointerInnerHandle<'_, Smallvil>,
+        data: &mut Corrosion,
+        handle: &mut PointerInnerHandle<'_, Corrosion>,
         details: AxisFrame,
     ) {
         handle.axis(data, details)
     }
 
-    fn start_data(&self) -> &PointerGrabStartData<Smallvil> {
+    fn start_data(&self) -> &PointerGrabStartData<Corrosion> {
         &self.start_data
     }
 }

@@ -11,9 +11,9 @@ use smithay::{
     utils::SERIAL_COUNTER,
 };
 
-use crate::state::Smallvil;
+use crate::state::Corrosion;
 
-impl Smallvil {
+impl Corrosion {
     pub fn process_input_event<I: InputBackend>(&mut self, event: InputEvent<I>) {
         match event {
             InputEvent::Keyboard { event, .. } => {

@@ -1,4 +1,4 @@
-use crate::{grabs::resize_grab, Smallvil};
+use crate::{grabs::resize_grab, Corrosion};
 use smithay::{
     backend::renderer::utils::on_commit_buffer_handler,
     delegate_compositor, delegate_shm,
@@ -12,7 +12,7 @@ use smithay::{
 
 use super::xdg_shell;
 
-impl CompositorHandler for Smallvil {
+impl CompositorHandler for Corrosion {
     fn compositor_state(&mut self) -> &mut CompositorState {
         &mut self.compositor_state
     }
@@ -34,15 +34,15 @@ impl CompositorHandler for Smallvil {
     }
 }
 
-impl BufferHandler for Smallvil {
+impl BufferHandler for Corrosion {
     fn buffer_destroyed(&mut self, _buffer: &wl_buffer::WlBuffer) {}
 }
 
-impl ShmHandler for Smallvil {
+impl ShmHandler for Corrosion {
     fn shm_state(&self) -> &ShmState {
         &self.shm_state
     }
 }
 
-delegate_compositor!(Smallvil);
-delegate_shm!(Smallvil);
+delegate_compositor!(Corrosion);
+delegate_shm!(Corrosion);

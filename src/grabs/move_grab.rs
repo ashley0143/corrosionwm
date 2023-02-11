@@ -1,4 +1,4 @@
-use crate::Smallvil;
+use crate::Corrosion;
 use smithay::{
     desktop::Window,
     input::pointer::{
@@ -10,16 +10,16 @@ use smithay::{
 };
 
 pub struct MoveSurfaceGrab {
-    pub start_data: PointerGrabStartData<Smallvil>,
+    pub start_data: PointerGrabStartData<Corrosion>,
     pub window: Window,
     pub initial_window_location: Point<i32, Logical>,
 }
 
-impl PointerGrab<Smallvil> for MoveSurfaceGrab {
+impl PointerGrab<Corrosion> for MoveSurfaceGrab {
     fn motion(
         &mut self,
-        data: &mut Smallvil,
-        handle: &mut PointerInnerHandle<'_, Smallvil>,
+        data: &mut Corrosion,
+        handle: &mut PointerInnerHandle<'_, Corrosion>,
         _focus: Option<(WlSurface, Point<i32, Logical>)>,
         event: &MotionEvent,
     ) {
@@ -34,8 +34,8 @@ impl PointerGrab<Smallvil> for MoveSurfaceGrab {
 
     fn relative_motion(
         &mut self,
-        data: &mut Smallvil,
-        handle: &mut PointerInnerHandle<'_, Smallvil>,
+        data: &mut Corrosion,
+        handle: &mut PointerInnerHandle<'_, Corrosion>,
         focus: Option<(WlSurface, Point<i32, Logical>)>,
         event: &RelativeMotionEvent,
     ) {
@@ -44,8 +44,8 @@ impl PointerGrab<Smallvil> for MoveSurfaceGrab {
 
     fn button(
         &mut self,
-        data: &mut Smallvil,
-        handle: &mut PointerInnerHandle<'_, Smallvil>,
+        data: &mut Corrosion,
+        handle: &mut PointerInnerHandle<'_, Corrosion>,
         event: &ButtonEvent,
     ) {
         handle.button(data, event);
@@ -62,14 +62,14 @@ impl PointerGrab<Smallvil> for MoveSurfaceGrab {
 
     fn axis(
         &mut self,
-        data: &mut Smallvil,
-        handle: &mut PointerInnerHandle<'_, Smallvil>,
+        data: &mut Corrosion,
+        handle: &mut PointerInnerHandle<'_, Corrosion>,
         details: AxisFrame,
     ) {
         handle.axis(data, details)
     }
 
-    fn start_data(&self) -> &PointerGrabStartData<Smallvil> {
+    fn start_data(&self) -> &PointerGrabStartData<Corrosion> {
         &self.start_data
     }
 }

@@ -26,10 +26,10 @@ use smithay::reexports::wayland_protocols::xdg::decoration::zv1::server::zxdg_to
 
 use crate::{
     grabs::{MoveSurfaceGrab, ResizeSurfaceGrab},
-    Smallvil,
+    Corrosion,
 };
 
-impl XdgShellHandler for Smallvil {
+impl XdgShellHandler for Corrosion {
     fn xdg_shell_state(&mut self) -> &mut XdgShellState {
         &mut self.xdg_shell_state
     }
@@ -115,7 +115,7 @@ impl XdgShellHandler for Smallvil {
 }
 
 // Xdg Decoration
-impl XdgDecorationHandler for Smallvil {
+impl XdgDecorationHandler for Corrosion {
     fn new_decoration(&mut self, toplevel: ToplevelSurface) {
         toplevel.with_pending_state(|state| {
             // Advertise server side decoration
@@ -128,15 +128,15 @@ impl XdgDecorationHandler for Smallvil {
 }
 
 // Xdg Shell
-delegate_xdg_shell!(Smallvil);
+delegate_xdg_shell!(Corrosion);
 // Xdg Decoration
-delegate_xdg_decoration!(Smallvil);
+delegate_xdg_decoration!(Corrosion);
 
 fn check_grab(
-    seat: &Seat<Smallvil>,
+    seat: &Seat<Corrosion>,
     surface: &WlSurface,
     serial: Serial,
-) -> Option<PointerGrabStartData<Smallvil>> {
+) -> Option<PointerGrabStartData<Corrosion>> {
     let pointer = seat.get_pointer()?;
 
     // Check that this surface has a click grab.

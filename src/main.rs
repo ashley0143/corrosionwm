@@ -10,11 +10,11 @@ mod state;
 mod winit;
 
 use smithay::reexports::{calloop::EventLoop, wayland_server::Display};
-pub use state::Smallvil;
+pub use state::Corrosion;
 
 pub struct CalloopData {
-    state: Smallvil,
-    display: Display<Smallvil>,
+    state: Corrosion,
+    display: Display<Corrosion>,
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -23,8 +23,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let mut event_loop: EventLoop<CalloopData> = EventLoop::try_new()?;
 
-    let mut display: Display<Smallvil> = Display::new()?;
-    let state = Smallvil::new(&mut event_loop, &mut display, log.clone());
+    let mut display: Display<Corrosion> = Display::new()?;
+    let state = Corrosion::new(&mut event_loop, &mut display, log.clone());
 
     let mut data = CalloopData { state, display };
 
@@ -44,7 +44,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     event_loop.run(None, &mut data, move |_| {
-        // Smallvil is running
+        // Corrosion is running
     })?;
 
     Ok(())

@@ -21,7 +21,7 @@ use smithay::{
 
 use crate::CalloopData;
 
-pub struct Smallvil {
+pub struct Corrosion {
     pub start_time: std::time::Instant,
     pub socket_name: OsString,
 
@@ -35,13 +35,13 @@ pub struct Smallvil {
     pub xdg_decoration_state: XdgDecorationState,
     pub shm_state: ShmState,
     pub output_manager_state: OutputManagerState,
-    pub seat_state: SeatState<Smallvil>,
+    pub seat_state: SeatState<Corrosion>,
     pub data_device_state: DataDeviceState,
 
     pub seat: Seat<Self>,
 }
 
-impl Smallvil {
+impl Corrosion {
     pub fn new(event_loop: &mut EventLoop<CalloopData>, display: &mut Display<Self>, log: Logger) -> Self {
         let start_time = std::time::Instant::now();
 
@@ -49,7 +49,7 @@ impl Smallvil {
 
         let compositor_state = CompositorState::new::<Self, _>(&dh, log.clone());
         let xdg_shell_state = XdgShellState::new::<Self, _>(&dh, log.clone());
-        let xdg_decoration_state = XdgDecorationState::new::<Smallvil, _>(
+        let xdg_decoration_state = XdgDecorationState::new::<Corrosion, _>(
             &display.handle(),
             None,
         );
@@ -101,7 +101,7 @@ impl Smallvil {
     }
 
     fn init_wayland_listener(
-        display: &mut Display<Smallvil>,
+        display: &mut Display<Corrosion>,
         event_loop: &mut EventLoop<CalloopData>,
         log: slog::Logger,
     ) -> OsString {

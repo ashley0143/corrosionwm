@@ -1,7 +1,7 @@
 mod compositor;
 mod xdg_shell;
 
-use crate::Smallvil;
+use crate::Corrosion;
 
 //
 // Wl Seat
@@ -12,11 +12,11 @@ use smithay::reexports::wayland_server::protocol::wl_surface::WlSurface;
 use smithay::wayland::data_device::{ClientDndGrabHandler, DataDeviceHandler, ServerDndGrabHandler};
 use smithay::{delegate_data_device, delegate_output, delegate_seat};
 
-impl SeatHandler for Smallvil {
+impl SeatHandler for Corrosion {
     type KeyboardFocus = WlSurface;
     type PointerFocus = WlSurface;
 
-    fn seat_state(&mut self) -> &mut SeatState<Smallvil> {
+    fn seat_state(&mut self) -> &mut SeatState<Corrosion> {
         &mut self.seat_state
     }
 
@@ -29,25 +29,25 @@ impl SeatHandler for Smallvil {
     fn focus_changed(&mut self, _seat: &smithay::input::Seat<Self>, _focused: Option<&WlSurface>) {}
 }
 
-delegate_seat!(Smallvil);
+delegate_seat!(Corrosion);
 
 //
 // Wl Data Device
 //
 
-impl DataDeviceHandler for Smallvil {
+impl DataDeviceHandler for Corrosion {
     fn data_device_state(&self) -> &smithay::wayland::data_device::DataDeviceState {
         &self.data_device_state
     }
 }
 
-impl ClientDndGrabHandler for Smallvil {}
-impl ServerDndGrabHandler for Smallvil {}
+impl ClientDndGrabHandler for Corrosion {}
+impl ServerDndGrabHandler for Corrosion {}
 
-delegate_data_device!(Smallvil);
+delegate_data_device!(Corrosion);
 
 //
 // Wl Output & Xdg Output
 //
 
-delegate_output!(Smallvil);
+delegate_output!(Corrosion);

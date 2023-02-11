@@ -18,7 +18,7 @@ use smithay::{
 
 use slog::Logger;
 
-use crate::{CalloopData, Smallvil};
+use crate::{CalloopData, Corrosion};
 
 pub fn init_winit(
     event_loop: &mut EventLoop<CalloopData>,
@@ -45,7 +45,7 @@ pub fn init_winit(
         },
         log.clone(),
     );
-    let _global = output.create_global::<Smallvil>(&display.handle());
+    let _global = output.create_global::<Corrosion>(&display.handle());
     output.change_current_state(Some(mode), Some(Transform::Flipped180), None, Some((0, 0).into()));
     output.set_preferred(mode);
 
