@@ -47,25 +47,26 @@ impl XdgShellHandler for Corrosion {
         let seat = Seat::from_resource(&seat).unwrap();
 
         let wl_surface = surface.wl_surface();
+        if self.seat.get_keyboard().unwrap().modifier_state().logo {
+            if let Some(start_data) = check_grab(&seat, wl_surface, serial) {
+                let pointer = seat.get_pointer().unwrap();
 
-        if let Some(start_data) = check_grab(&seat, wl_surface, serial) {
-            let pointer = seat.get_pointer().unwrap();
+                let window = self
+                    .space
+                    .elements()
+                    .find(|w| w.toplevel().wl_surface() == wl_surface)
+                    .unwrap()
+                    .clone();
+                let initial_window_location = self.space.element_location(&window).unwrap();
 
-            let window = self
-                .space
-                .elements()
-                .find(|w| w.toplevel().wl_surface() == wl_surface)
-                .unwrap()
-                .clone();
-            let initial_window_location = self.space.element_location(&window).unwrap();
+                let grab = MoveSurfaceGrab {
+                    start_data,
+                    window,
+                    initial_window_location,
+                };
 
-            let grab = MoveSurfaceGrab {
-                start_data,
-                window,
-                initial_window_location,
-            };
-
-            pointer.set_grab(self, grab, serial, Focus::Clear);
+                pointer.set_grab(self, grab, serial, Focus::Clear);
+            }
         }
     }
 
