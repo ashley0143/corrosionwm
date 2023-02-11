@@ -2,9 +2,9 @@ name: Rust
 
 on:
   push:
-    branches: "*"
+    branches: [ main ]
   pull_request:
-    branches: "*"
+    branches: [ main ]
 
 env:
   CARGO_TERM_COLOR: always
@@ -37,7 +37,7 @@ jobs:
           override: true
           components: rustfmt, clippy
     - name: Install Dependences
-      run: sudo apt install libudev-dev
+      run: sudo apt install libudev-dev libdbus-1-dev pkg-config
     - name: Build
       run: cargo build --verbose
     - name: Lint
