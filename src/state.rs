@@ -1,4 +1,4 @@
-use smithay::reexports::wayland_server::protocol::wl_surface::WlSurface;
+use smithay::reexports::wayland_server::protocol::wl_surface::{self, WlSurface};
 use smithay::{
     input::{Seat, SeatHandler, SeatState},
     wayland::compositor::CompositorHandler,
@@ -17,7 +17,7 @@ impl CompositorHandler for Corrosion {
         &mut self.compositor_state
     }
 
-    fn commit(&mut self, surface: &wayland_server::protocol::wl_surface::WlSurface) {
+    fn commit(&mut self, surface: &wl_surface::WlSurface) {
         // Stuff goes here
     }
 }
