@@ -1,5 +1,5 @@
+use smithay::reexports::wayland_server::Display;
 use state::Corrosion;
-use wayland_server::Display;
 mod state;
 
 fn main() {

@@ -1,10 +1,10 @@
+use smithay::reexports::wayland_server::protocol::wl_surface::WlSurface;
 use smithay::{
     input::{Seat, SeatHandler, SeatState},
     wayland::compositor::CompositorHandler,
     wayland::socket,
     wayland::{compositor::CompositorState, seat},
 };
-use wayland_server::protocol::wl_surface::WlSurface;
 
 pub struct Corrosion {
     pub seat: Seat<Self>,
