@@ -6,6 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+calloop = "0.10.5"
 smithay = { git = "https://github.com/Smithay/smithay", version = "0.3.0", features = [ "backend_winit", "wayland_frontend", "desktop", ] }
 slog = "2.7.0"
 slog-term = "2.9.0"
