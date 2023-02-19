@@ -4,9 +4,7 @@
 use slog::Logger;
 use smithay::reexports::{
     calloop::{EventLoop, LoopSignal},
-    wayland_server::{
-        Display,
-    },
+    wayland_server::Display,
 };
 use smithay::{
     desktop::{Space, Window},
@@ -26,7 +24,8 @@ pub struct Corrosion {
 
 // Implement the Corrosion struct
 impl Corrosion {
-    pub fn new( // Function to create a new Corrosion struct
+    pub fn new(
+        // Function to create a new Corrosion struct
         display: Display<Self>,
         logger: Option<Logger>,
         event_loop: EventLoop<crate::CalloopData>,

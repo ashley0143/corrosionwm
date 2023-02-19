@@ -2,12 +2,18 @@
 name = "corrosionwm"
 version = "0.1.0"
 edition = "2021"
+authors = ["CorrosionWM Developers"]
+description = "A aesthetic Wayland compositor written in Rust"
+repository = "https://github.com/corrosionwm/corrosionwm"
+license = "MIT"
+readme = "README.md"
+keywords = ["wayland", "compositor", "rust"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 calloop = "0.10.5"
-smithay = { git = "https://github.com/Smithay/smithay", version = "0.3.0", features = [ "backend_winit", "wayland_frontend", "desktop", ] }
+smithay = { git = "https://github.com/Smithay/smithay", features = [ "backend_winit", "wayland_frontend", "desktop", ] }
 slog = "2.7.0"
 slog-term = "2.9.0"
 slog-async = "2.7.0"

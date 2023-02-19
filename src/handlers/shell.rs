@@ -7,8 +7,7 @@ use smithay::{
     reexports::wayland_server::protocol::wl_seat::WlSeat,
     utils::Serial,
     wayland::shell::xdg::{
-        PopupSurface, PositionerState, ToplevelSurface, XdgShellHandler,
-        XdgShellState,
+        PopupSurface, PositionerState, ToplevelSurface, XdgShellHandler, XdgShellState,
     },
 };
 
