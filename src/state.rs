@@ -1,19 +1,20 @@
+// src/state.rs
+// Handles the state of the compositor
+// Imports
 use slog::Logger;
 use smithay::reexports::{
     calloop::{EventLoop, LoopSignal},
     wayland_server::{
-        protocol::wl_surface::{self, WlSurface},
         Display,
     },
 };
 use smithay::{
     desktop::{Space, Window},
-    input::{Seat, SeatHandler, SeatState},
-    wayland::compositor::CompositorHandler,
-    wayland::socket,
-    wayland::{compositor::CompositorState, seat, shell::xdg::XdgShellState},
+    input::{Seat, SeatState},
+    wayland::{compositor::CompositorState, shell::xdg::XdgShellState},
 };
 
+// Define the Corrosion struct
 pub struct Corrosion {
     pub seat: Seat<Self>,
     pub compositor_state: CompositorState,
@@ -23,8 +24,9 @@ pub struct Corrosion {
     pub loop_signal: LoopSignal,
 }
 
+// Implement the Corrosion struct
 impl Corrosion {
-    pub fn new(
+    pub fn new( // Function to create a new Corrosion struct
         display: Display<Self>,
         logger: Option<Logger>,
         event_loop: EventLoop<crate::CalloopData>,
@@ -32,7 +34,7 @@ impl Corrosion {
         let dh = &display.handle();
 
         let mut seat_state = SeatState::new();
-        let mut seat: Seat<Self> = seat_state.new_wl_seat(dh, "seat-0", logger.clone());
+        let seat: Seat<Self> = seat_state.new_wl_seat(dh, "seat-0", logger.clone());
 
         let compositor_state = CompositorState::new::<Self, _>(dh, logger.clone());
 

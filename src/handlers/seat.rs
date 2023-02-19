@@ -1,3 +1,6 @@
+// src/handlers/seat.rs
+// Handles the seat
+// Imports
 use crate::state::Corrosion;
 use smithay::{
     delegate_seat,
@@ -5,6 +8,7 @@ use smithay::{
     reexports::wayland_server::protocol::wl_surface::WlSurface,
 };
 
+// Implement the SeatHandler trait for Corrosion
 impl SeatHandler for Corrosion {
     type KeyboardFocus = WlSurface;
     type PointerFocus = WlSurface;

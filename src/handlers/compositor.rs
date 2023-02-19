@@ -1,3 +1,6 @@
+// src/handlers/compositor.rs
+// Handles the compositor
+// Imports
 use crate::state::Corrosion;
 use smithay::{
     backend::renderer::utils,
@@ -6,6 +9,7 @@ use smithay::{
     wayland::compositor::{self, CompositorHandler, CompositorState},
 };
 
+// Implement the CompositorHandler trait for Corrosion
 impl CompositorHandler for Corrosion {
     fn compositor_state(&mut self) -> &mut CompositorState {
         &mut self.compositor_state
