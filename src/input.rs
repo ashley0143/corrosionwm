@@ -35,7 +35,14 @@ impl Corrosion {
                         if keybindings::get_mod_key_and_compare(modifier) {
                             if handle.modified_sym() == keysyms::KEY_h | keysyms::KEY_H {
                                 println!("debug uwu");
+                                // TODO: Make this configurable
                                 action = KeyAction::Spawn(String::from("wofi --show drun"));
+                            } else if handle.modified_sym() == keysyms::KEY_q | keysyms::KEY_Q {
+                                println!("bye bye");
+                                action = KeyAction::Spawn(String::from("killall corrosionwm"));
+                            } else if handle.modified_sym() == keysyms::KEY_Return {
+                                println!("spawn terminal");
+                                action = KeyAction::Spawn(String::from("kitty"));
                             } else {
                                 return FilterResult::Forward;
                             }
