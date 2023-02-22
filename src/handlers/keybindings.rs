@@ -1,17 +1,13 @@
-use std::process::Command;
 use smithay::input::keyboard::ModifiersState;
+use std::process::Command;
 
 use crate::state::Corrosion;
 
 // code to convert emacs style keybindings to xkb keysyms
 pub fn get_mod_key_and_compare(state: &ModifiersState) -> bool {
     let mod_key = match std::env::var("MOD_KEY") {
-        Ok(value) => {
-            value
-        },
-        Err(_) => {
-            String::from("alt")
-        }
+        Ok(value) => value,
+        Err(_) => String::from("alt"),
     };
 
     if &mod_key == "ctrl" && state.ctrl {
@@ -52,7 +48,7 @@ impl Corrosion {
                 println!("args: {:?}", args);
                 execution.args(args);
                 execution.spawn().ok();
-            },
+            }
             _ => {
                 println!("Function not implemented yet");
             }
