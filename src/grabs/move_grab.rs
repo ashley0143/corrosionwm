@@ -55,7 +55,9 @@ impl PointerGrab<Corrosion> for MoveSurfaceGrab {
         const BTN_LEFT: u32 = 0x110;
         const KEY_LEFTMETA: u32 = 125;
 
-        if !handle.current_pressed().contains(&BTN_LEFT) && !handle.current_pressed().contains(&KEY_LEFTMETA) {
+        if !handle.current_pressed().contains(&BTN_LEFT)
+            && !handle.current_pressed().contains(&KEY_LEFTMETA)
+        {
             // No more buttons are pressed, release the grab.
             handle.unset_grab(data, event.serial, event.time);
         }

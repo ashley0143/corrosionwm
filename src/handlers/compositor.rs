@@ -24,7 +24,11 @@ impl CompositorHandler for Corrosion {
             while let Some(parent) = get_parent(&root) {
                 root = parent;
             }
-            if let Some(window) = self.space.elements().find(|w| w.toplevel().wl_surface() == &root) {
+            if let Some(window) = self
+                .space
+                .elements()
+                .find(|w| w.toplevel().wl_surface() == &root)
+            {
                 window.on_commit();
             }
         };

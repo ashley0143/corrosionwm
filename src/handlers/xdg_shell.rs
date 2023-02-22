@@ -1,5 +1,5 @@
 use smithay::{
-    delegate_xdg_shell, delegate_xdg_decoration,
+    delegate_xdg_decoration, delegate_xdg_shell,
     desktop::{Space, Window},
     input::{
         pointer::{Focus, GrabStartData as PointerGrabStartData},
@@ -16,8 +16,8 @@ use smithay::{
     wayland::{
         compositor::with_states,
         shell::xdg::{
-            PopupSurface, PositionerState, ToplevelSurface, XdgShellHandler, XdgShellState, decoration::XdgDecorationHandler,
-            XdgToplevelSurfaceData,
+            decoration::XdgDecorationHandler, PopupSurface, PositionerState, ToplevelSurface,
+            XdgShellHandler, XdgShellState, XdgToplevelSurfaceData,
         },
     },
 };
@@ -122,8 +122,10 @@ impl XdgDecorationHandler for Corrosion {
         });
         toplevel.send_configure();
     }
-    fn request_mode(&mut self, _toplevel: ToplevelSurface, _mode: Mode) { /* ... */ }
-    fn unset_mode(&mut self, _toplevel: ToplevelSurface) { /* ... */ }
+    fn request_mode(&mut self, _toplevel: ToplevelSurface, _mode: Mode) { /* ... */
+    }
+    fn unset_mode(&mut self, _toplevel: ToplevelSurface) { /* ... */
+    }
 }
 
 // Xdg Shell

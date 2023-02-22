@@ -46,7 +46,12 @@ pub fn init_winit(
         log.clone(),
     );
     let _global = output.create_global::<Corrosion>(&display.handle());
-    output.change_current_state(Some(mode), Some(Transform::Flipped180), None, Some((0, 0).into()));
+    output.change_current_state(
+        Some(mode),
+        Some(Transform::Flipped180),
+        None,
+        Some((0, 0).into()),
+    );
     output.set_preferred(mode);
 
     state.space.map_output(&output, (0, 0));
@@ -58,19 +63,21 @@ pub fn init_winit(
     let mut full_redraw = 0u8;
 
     let timer = Timer::immediate();
-    event_loop.handle().insert_source(timer, move |_, _, data| {
-        winit_dispatch(
-            &mut backend,
-            &mut winit,
-            data,
-            &output,
-            &mut damage_tracked_renderer,
-            &mut full_redraw,
-            &log,
-        )
-        .unwrap();
-        TimeoutAction::ToDuration(Duration::from_millis(16))
-    })?;
+    event_loop
+        .handle()
+        .insert_source(timer, move |_, _, data| {
+            winit_dispatch(
+                &mut backend,
+                &mut winit,
+                data,
+                &output,
+                &mut damage_tracked_renderer,
+                &mut full_redraw,
+                &log,
+            )
+            .unwrap();
+            TimeoutAction::ToDuration(Duration::from_millis(16))
+        })?;
 
     Ok(())
 }

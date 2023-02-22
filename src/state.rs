@@ -14,8 +14,12 @@ use smithay::{
     },
     utils::{Logical, Point},
     wayland::{
-        compositor::CompositorState, data_device::DataDeviceState, output::OutputManagerState,
-        shell::xdg::{XdgShellState, decoration::XdgDecorationState}, shm::ShmState, socket::ListeningSocketSource,
+        compositor::CompositorState,
+        data_device::DataDeviceState,
+        output::OutputManagerState,
+        shell::xdg::{decoration::XdgDecorationState, XdgShellState},
+        shm::ShmState,
+        socket::ListeningSocketSource,
     },
 };
 
@@ -42,17 +46,18 @@ pub struct Corrosion {
 }
 
 impl Corrosion {
-    pub fn new(event_loop: &mut EventLoop<CalloopData>, display: &mut Display<Self>, log: Logger) -> Self {
+    pub fn new(
+        event_loop: &mut EventLoop<CalloopData>,
+        display: &mut Display<Self>,
+        log: Logger,
+    ) -> Self {
         let start_time = std::time::Instant::now();
 
         let dh = display.handle();
 
         let compositor_state = CompositorState::new::<Self, _>(&dh, log.clone());
         let xdg_shell_state = XdgShellState::new::<Self, _>(&dh, log.clone());
-        let xdg_decoration_state = XdgDecorationState::new::<Corrosion, _>(
-            &display.handle(),
-            None,
-        );
+        let xdg_decoration_state = XdgDecorationState::new::<Corrosion, _>(&display.handle(), None);
         let shm_state = ShmState::new::<Self, _>(&dh, vec![], log.clone());
         let output_manager_state = OutputManagerState::new_with_xdg_output::<Self>(&dh);
         let mut seat_state = SeatState::new();
@@ -151,11 +156,13 @@ impl Corrosion {
         pointer: &PointerHandle<Self>,
     ) -> Option<(WlSurface, Point<i32, Logical>)> {
         let pos = pointer.current_location();
-        self.space.element_under(pos).and_then(|(window, location)| {
-            window
-                .surface_under(pos - location.to_f64(), WindowSurfaceType::ALL)
-                .map(|(s, p)| (s, p + location))
-        })
+        self.space
+            .element_under(pos)
+            .and_then(|(window, location)| {
+                window
+                    .surface_under(pos - location.to_f64(), WindowSurfaceType::ALL)
+                    .map(|(s, p)| (s, p + location))
+            })
     }
 }
 

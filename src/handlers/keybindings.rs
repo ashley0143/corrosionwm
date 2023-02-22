@@ -1,13 +1,12 @@
-use std::sync::Arc;
-use std::{collections::HashMap, process::Command};
-use smithay::input::keyboard::xkb::keysyms;
-use smithay::input::keyboard::xkb::keysym_to_utf8;
 use smithay::input::keyboard::xkb::ffi::xkb_keysym_from_name;
 use smithay::input::keyboard::xkb::ffi::XKB_KEYSYM_CASE_INSENSITIVE;
-
+use smithay::input::keyboard::xkb::keysym_to_utf8;
+use smithay::input::keyboard::xkb::keysyms;
+use std::sync::Arc;
+use std::{collections::HashMap, process::Command};
 
 // code to convert emacs style keybindings to xkb keysyms
-pub fn emacs_to_xkb(key: &str) -> (String, HashMap<&'static str, bool>){
+pub fn emacs_to_xkb(key: &str) -> (String, HashMap<&'static str, bool>) {
     // TODO: add more keys
     // FIXME: this is a hack, we should use a proper parser
     // for now, we just assume that the key is a single character
@@ -45,7 +44,7 @@ pub fn emacs_to_xkb(key: &str) -> (String, HashMap<&'static str, bool>){
     // ... someday
     // SOMEDAY
 
-    return(key, modifiers)
+    return (key, modifiers);
 }
 
 #[cfg(test)]

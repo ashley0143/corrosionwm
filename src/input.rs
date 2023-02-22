@@ -4,14 +4,14 @@ use smithay::{
         KeyboardKeyEvent, PointerAxisEvent, PointerButtonEvent,
     },
     input::{
-        keyboard::{FilterResult},
-        pointer::{AxisFrame, ButtonEvent, MotionEvent, GrabStartData, Focus},
+        keyboard::FilterResult,
+        pointer::{AxisFrame, ButtonEvent, Focus, GrabStartData, MotionEvent},
     },
     reexports::wayland_server::protocol::wl_surface::WlSurface,
     utils::SERIAL_COUNTER,
 };
 
-use crate::{state::Corrosion, grabs::MoveSurfaceGrab};
+use crate::{grabs::MoveSurfaceGrab, state::Corrosion};
 
 impl Corrosion {
     pub fn process_input_event<I: InputBackend>(&mut self, event: InputEvent<I>) {
@@ -70,7 +70,11 @@ impl Corrosion {
                         .map(|(w, l)| (w.clone(), l))
                     {
                         self.space.raise_element(&window, true);
-                        keyboard.set_focus(self, Some(window.toplevel().wl_surface().clone()), serial);
+                        keyboard.set_focus(
+                            self,
+                            Some(window.toplevel().wl_surface().clone()),
+                            serial,
+                        );
                         self.space.elements().for_each(|window| {
                             window.toplevel().send_configure();
                         });
@@ -84,7 +88,7 @@ impl Corrosion {
                             };
 
                             let initial_window_location =
-                                        self.space.element_location(&window).unwrap();
+                                self.space.element_location(&window).unwrap();
 
                             let grab = MoveSurfaceGrab {
                                 start_data,
@@ -101,7 +105,6 @@ impl Corrosion {
                         });
                         keyboard.set_focus(self, Option::<WlSurface>::None, serial);
                     }
-
                 };
 
                 pointer.button(
