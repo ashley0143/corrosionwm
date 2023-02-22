@@ -4,14 +4,18 @@ use smithay::{
         KeyboardKeyEvent, PointerAxisEvent, PointerButtonEvent,
     },
     input::{
-        keyboard::FilterResult,
+        keyboard::{keysyms, FilterResult},
         pointer::{AxisFrame, ButtonEvent, Focus, GrabStartData, MotionEvent},
     },
-    reexports::wayland_server::protocol::wl_surface::WlSurface,
+    reexports::{wayland_server::protocol::wl_surface::WlSurface},
     utils::SERIAL_COUNTER,
 };
 
-use crate::{grabs::MoveSurfaceGrab, state::Corrosion};
+use crate::{
+    grabs::MoveSurfaceGrab,
+    handlers::keybindings::{KeyAction, self},
+    state::Corrosion,
+};
 
 impl Corrosion {
     pub fn process_input_event<I: InputBackend>(&mut self, event: InputEvent<I>) {
@@ -20,14 +24,33 @@ impl Corrosion {
                 let serial = SERIAL_COUNTER.next_serial();
                 let time = Event::time_msec(&event);
 
-                self.seat.get_keyboard().unwrap().input::<(), _>(
+                let action = self.seat.get_keyboard().unwrap().input::<KeyAction, _>(
                     self,
                     event.key_code(),
                     event.state(),
                     serial,
                     time,
-                    |_, _, _| FilterResult::Forward,
+                    |_, modifier, handle| {
+                        let action: KeyAction ;
+                        if keybindings::get_mod_key_and_compare(modifier) {
+                            if handle.modified_sym() == keysyms::KEY_H {
+                                println!("debug uwu");
+                                action = KeyAction::Spawn(String::from("wofi --show drun"));
+                            } else {
+                                return FilterResult::Forward;
+                            }
+                        } else {
+                            return FilterResult::Forward;
+                        }
+                        FilterResult::Intercept(action)
+                    },
                 );
+                match action {
+                    Some(action) => {
+                        self.parse_keybindings(action);
+                    },
+                    None => {}
+                }
             }
             InputEvent::PointerMotion { .. } => {}
             InputEvent::PointerMotionAbsolute { event, .. } => {

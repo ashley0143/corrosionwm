@@ -1,5 +1,5 @@
 mod compositor;
-mod keybindings;
+pub mod keybindings;
 mod xdg_shell;
 
 use crate::Corrosion;
