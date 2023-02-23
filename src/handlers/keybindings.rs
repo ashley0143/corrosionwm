@@ -19,12 +19,15 @@ pub fn get_mod_key_and_compare(state: &ModifiersState) -> bool {
     if &mod_key == "shift" && state.shift {
         return true;
     }
+    if &mod_key == "super" && state.logo {
+        return true;
+    }
 
     false
 }
 
 pub enum KeyAction {
-    _Quit,
+    Quit,
     _CloseWindow,
     Spawn(String),
     _Launcher(String),
@@ -48,6 +51,10 @@ impl Corrosion {
                 println!("args: {:?}", args);
                 execution.args(args);
                 execution.spawn().ok();
+            }
+            KeyAction::Quit => {
+                // TODO: cleanup
+                self.loop_signal.stop();
             }
             _ => {
                 println!("Function not implemented yet");
