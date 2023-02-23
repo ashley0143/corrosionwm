@@ -16,35 +16,29 @@ use smithay::{
     utils::{Rectangle, Transform},
 };
 
-use slog::Logger;
-
 use crate::{CalloopData, Corrosion};
 
 pub fn init_winit(
     event_loop: &mut EventLoop<CalloopData>,
     data: &mut CalloopData,
-    log: Logger,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let display = &mut data.display;
     let state = &mut data.state;
 
-    let (mut backend, mut winit) = winit::init(log.clone())?;
+    let (mut backend, mut winit) = winit::init()?;
 
     let mode = Mode {
         size: backend.window_size().physical_size,
         refresh: 60_000,
     };
 
-    let output = Output::new::<_>(
-        "winit".to_string(),
-        PhysicalProperties {
-            size: (0, 0).into(),
-            subpixel: Subpixel::Unknown,
-            make: "corrosionwm".into(),
-            model: "Winit".into(),
-        },
-        log.clone(),
-    );
+    let output = Output::new(String::from("Corrosionwm"), PhysicalProperties {
+        size: (0, 0).into(),
+        subpixel: Subpixel::Unknown,
+        make: "corrosionwm".into(),
+        model: "Winit".into(),
+    });
+
     let _global = output.create_global::<Corrosion>(&display.handle());
     output.change_current_state(
         Some(mode),
@@ -73,7 +67,6 @@ pub fn init_winit(
                 &output,
                 &mut damage_tracked_renderer,
                 &mut full_redraw,
-                &log,
             )
             .unwrap();
             TimeoutAction::ToDuration(Duration::from_millis(16))
@@ -88,8 +81,7 @@ pub fn winit_dispatch(
     data: &mut CalloopData,
     output: &Output,
     damage_tracked_renderer: &mut DamageTrackedRenderer,
-    full_redraw: &mut u8,
-    log: &Logger,
+    full_redraw: &mut u8
 ) -> Result<(), Box<dyn std::error::Error>> {
     let display = &mut data.display;
     let state = &mut data.state;
@@ -125,15 +117,14 @@ pub fn winit_dispatch(
     let damage = Rectangle::from_loc_and_size((0, 0), size);
 
     backend.bind()?;
-    smithay::desktop::space::render_output::<_, WaylandSurfaceRenderElement<Gles2Renderer>, _, _, _>(
+    smithay::desktop::space::render_output::<_, WaylandSurfaceRenderElement<Gles2Renderer>, _, _>(
         output,
         backend.renderer(),
         0,
         [&state.space],
         &[],
         damage_tracked_renderer,
-        [0.1, 0.1, 0.1, 1.0],
-        log.clone(),
+        [0.1, 0.1, 0.1, 1.0]
     )?;
     backend.submit(Some(&[damage]))?;
 
