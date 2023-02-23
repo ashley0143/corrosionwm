@@ -17,5 +17,6 @@ pkgs.mkShell rec {
     wlroots
     wayland-protocols
     mesa
+    libglvnd
   ];
 }
