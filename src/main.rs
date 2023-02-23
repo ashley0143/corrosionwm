@@ -39,6 +39,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             std::process::Command::new(command).spawn().ok();
         }
         _ => {
+            // TODO: Make this configurable
             std::process::Command::new("kitty").spawn().expect("You may not have kitty installed, if not, please install it, or use the --command flag to specify a different terminal emulator.");
         }
     }

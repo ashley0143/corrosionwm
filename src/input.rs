@@ -7,13 +7,13 @@ use smithay::{
         keyboard::{keysyms, FilterResult},
         pointer::{AxisFrame, ButtonEvent, Focus, GrabStartData, MotionEvent},
     },
-    reexports::{wayland_server::protocol::wl_surface::WlSurface},
+    reexports::wayland_server::protocol::wl_surface::WlSurface,
     utils::SERIAL_COUNTER,
 };
 
 use crate::{
     grabs::MoveSurfaceGrab,
-    handlers::keybindings::{KeyAction, self},
+    handlers::keybindings::{self, KeyAction},
     state::Corrosion,
 };
 
@@ -31,11 +31,18 @@ impl Corrosion {
                     serial,
                     time,
                     |_, modifier, handle| {
-                        let action: KeyAction ;
+                        let action: KeyAction;
                         if keybindings::get_mod_key_and_compare(modifier) {
-                            if handle.modified_sym() == keysyms::KEY_H {
+                            if handle.modified_sym() == keysyms::KEY_h | keysyms::KEY_H {
                                 println!("debug uwu");
+                                // TODO: Make this configurable
                                 action = KeyAction::Spawn(String::from("wofi --show drun"));
+                            } else if handle.modified_sym() == keysyms::KEY_q | keysyms::KEY_Q {
+                                println!("bye bye");
+                                action = KeyAction::Spawn(String::from("killall corrosionwm"));
+                            } else if handle.modified_sym() == keysyms::KEY_Return {
+                                println!("spawn terminal");
+                                action = KeyAction::Spawn(String::from("kitty"));
                             } else {
                                 return FilterResult::Forward;
                             }
@@ -48,7 +55,7 @@ impl Corrosion {
                 match action {
                     Some(action) => {
                         self.parse_keybindings(action);
-                    },
+                    }
                     None => {}
                 }
             }
