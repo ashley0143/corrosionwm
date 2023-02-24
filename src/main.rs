@@ -21,7 +21,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     } else {
         tracing_subscriber::fmt().init();
     }
-    
+
     let mut event_loop: EventLoop<CalloopData> = EventLoop::try_new()?;
 
     let mut display: Display<Corrosion> = Display::new()?;
