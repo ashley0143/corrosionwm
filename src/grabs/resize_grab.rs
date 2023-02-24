@@ -153,7 +153,9 @@ impl PointerGrab<Corrosion> for ResizeSurfaceGrab {
         const BTN_RIGHT: u32 = 0x111;
         const BTN_RIGHTMETA: u32 = 126;
 
-        if !handle.current_pressed().contains(&BTN_RIGHT) && !handle.current_pressed().contains(&BTN_RIGHTMETA) {
+        if !handle.current_pressed().contains(&BTN_RIGHT)
+            && !handle.current_pressed().contains(&BTN_RIGHTMETA)
+        {
             // No more buttons are pressed, release the grab.
             handle.unset_grab(data, event.serial, event.time);
 
