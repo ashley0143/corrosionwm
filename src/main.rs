@@ -1,5 +1,6 @@
 #![allow(irrefutable_let_patterns)]
 
+// modules
 mod handlers;
 
 mod grabs;
@@ -7,6 +8,7 @@ mod input;
 mod state;
 mod winit;
 
+// imports
 use smithay::reexports::{calloop::EventLoop, wayland_server::Display};
 pub use state::Corrosion;
 
@@ -21,7 +23,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     } else {
         tracing_subscriber::fmt().init();
     }
-    
+
     let mut event_loop: EventLoop<CalloopData> = EventLoop::try_new()?;
 
     let mut display: Display<Corrosion> = Display::new()?;
@@ -36,17 +38,23 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let arg = args.next();
 
     match (flag.as_deref(), arg) {
+        (Some("-h") | Some("--help"), _) => {
+            println!("Usage: corrosionwm [OPTION]...");
+            println!("A Wayland compositor written in Rust");
+            println!("--command <command> or -c <command> to run a command on startup");
+        }
         (Some("-c") | Some("--command"), Some(command)) => {
             std::process::Command::new(command).spawn().ok();
         }
         _ => {
             // TODO: Make this configurable
-            std::process::Command::new("kitty").spawn().expect("You may not have kitty installed, if not, please install it, or use the --command flag to specify a different terminal emulator.");
+            // TODO: remove this completely as this shit is just for debugging
+            std::process::Command::new("kitty").spawn().expect("You may not have kitty installed, if not, please install it, or use the --command/-c flag to specify a different program to run.");
         }
     }
 
     event_loop.run(None, &mut data, move |_| {
-        // Corrosion is running
+        // corrosionWM is running
     })?;
 
     Ok(())

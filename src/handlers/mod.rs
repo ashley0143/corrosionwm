@@ -1,12 +1,15 @@
+// mod.rs
+// modules for the src/handlers directory
+
+// modules
 mod compositor;
 pub mod keybindings;
 mod xdg_shell;
 
+// imports
 use crate::Corrosion;
 
-//
 // Wl Seat
-//
 
 use smithay::input::{SeatHandler, SeatState};
 use smithay::reexports::wayland_server::protocol::wl_surface::WlSurface;
