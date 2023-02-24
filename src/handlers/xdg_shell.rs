@@ -113,7 +113,7 @@ impl XdgShellHandler for Corrosion {
     }
 }
 
-// Xdg Decoration
+// xdg decoration
 impl XdgDecorationHandler for Corrosion {
     fn new_decoration(&mut self, toplevel: ToplevelSurface) {
         toplevel.with_pending_state(|state| {

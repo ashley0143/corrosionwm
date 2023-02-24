@@ -37,7 +37,7 @@ pub fn init_winit(
         PhysicalProperties {
             size: (0, 0).into(),
             subpixel: Subpixel::Unknown,
-            make: "corrosionWM".into(),
+            make: "corrosionWM".into(), // name of the window manager if you are running a window manager inside a window manager this might matter to you
             model: "Winit".into(),
         },
     );

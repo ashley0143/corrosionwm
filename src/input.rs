@@ -35,6 +35,8 @@ impl Corrosion {
                         if keybindings::get_mod_key_and_compare(modifier)
                             && press_state == KeyState::Pressed
                         {
+                            // our shitty keybindings
+                            // TODO: get rid of this shit
                             if handle.modified_sym() == keysyms::KEY_h | keysyms::KEY_H {
                                 println!("debug uwu");
                                 // TODO: Make this configurable
