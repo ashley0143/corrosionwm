@@ -153,6 +153,9 @@ fn check_grab(
         return None;
     }
 
+    // if you see this thank you for reading our shitty code
+    // also i am sorry for the shitty code
+
     Some(start_data)
 }
 
