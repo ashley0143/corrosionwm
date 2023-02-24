@@ -32,12 +32,15 @@ pub fn init_winit(
         refresh: 60_000,
     };
 
-    let output = Output::new(String::from("Corrosionwm"), PhysicalProperties {
-        size: (0, 0).into(),
-        subpixel: Subpixel::Unknown,
-        make: "corrosionwm".into(),
-        model: "Winit".into(),
-    });
+    let output = Output::new(
+        String::from("corrosionWM"),
+        PhysicalProperties {
+            size: (0, 0).into(),
+            subpixel: Subpixel::Unknown,
+            make: "corrosionWM".into(), // name of the window manager if you are running a window manager inside a window manager this might matter to you
+            model: "Winit".into(),
+        },
+    );
 
     let _global = output.create_global::<Corrosion>(&display.handle());
     output.change_current_state(
@@ -81,7 +84,7 @@ pub fn winit_dispatch(
     data: &mut CalloopData,
     output: &Output,
     damage_tracked_renderer: &mut DamageTrackedRenderer,
-    full_redraw: &mut u8
+    full_redraw: &mut u8,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let display = &mut data.display;
     let state = &mut data.state;
@@ -124,7 +127,7 @@ pub fn winit_dispatch(
         [&state.space],
         &[],
         damage_tracked_renderer,
-        [0.1, 0.1, 0.1, 1.0]
+        [0.1, 0.1, 0.1, 1.0],
     )?;
     backend.submit(Some(&[damage]))?;
 

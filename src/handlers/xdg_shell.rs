@@ -113,7 +113,7 @@ impl XdgShellHandler for Corrosion {
     }
 }
 
-// Xdg Decoration
+// xdg decoration
 impl XdgDecorationHandler for Corrosion {
     fn new_decoration(&mut self, toplevel: ToplevelSurface) {
         toplevel.with_pending_state(|state| {
@@ -152,6 +152,9 @@ fn check_grab(
     if !focus.id().same_client_as(&surface.id()) {
         return None;
     }
+
+    // if you see this thank you for reading our shitty code
+    // also i am sorry for the shitty code
 
     Some(start_data)
 }

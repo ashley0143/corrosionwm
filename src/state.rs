@@ -44,10 +44,7 @@ pub struct Corrosion {
 }
 
 impl Corrosion {
-    pub fn new(
-        event_loop: &mut EventLoop<CalloopData>,
-        display: &mut Display<Self>,
-    ) -> Self {
+    pub fn new(event_loop: &mut EventLoop<CalloopData>, display: &mut Display<Self>) -> Self {
         let start_time = std::time::Instant::now();
 
         let dh = display.handle();
