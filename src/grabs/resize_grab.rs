@@ -150,9 +150,10 @@ impl PointerGrab<Corrosion> for ResizeSurfaceGrab {
 
         // The button is a button code as defined in the
         // Linux kernel's linux/input-event-codes.h header file, e.g. BTN_LEFT.
-        const BTN_LEFT: u32 = 0x110;
+        const BTN_RIGHT: u32 = 0x111;
+        const BTN_RIGHTMETA: u32 = 126;
 
-        if !handle.current_pressed().contains(&BTN_LEFT) {
+        if !handle.current_pressed().contains(&BTN_RIGHT) && !handle.current_pressed().contains(&BTN_RIGHTMETA) {
             // No more buttons are pressed, release the grab.
             handle.unset_grab(data, event.serial, event.time);
 

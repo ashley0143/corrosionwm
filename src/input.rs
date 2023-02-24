@@ -12,7 +12,7 @@ use smithay::{
 };
 
 use crate::{
-    grabs::MoveSurfaceGrab,
+    grabs::{MoveSurfaceGrab, ResizeSurfaceGrab, resize_grab::ResizeEdge},
     handlers::keybindings::{self, KeyAction},
     state::Corrosion,
 };
@@ -122,13 +122,24 @@ impl Corrosion {
                             let initial_window_location =
                                 self.space.element_location(&window).unwrap();
 
-                            let grab = MoveSurfaceGrab {
-                                start_data,
-                                window,
+                            let edges = ResizeEdge::all();
+
+                            let initial_rect = window.geometry();
+
+                            let move_grab = MoveSurfaceGrab {
+                                start_data: start_data.clone(),
+                                window: window.clone(),
                                 initial_window_location,
                             };
+                            
+                            let resize_grab = ResizeSurfaceGrab::start(start_data, window, edges, initial_rect);
 
-                            pointer.set_grab(self, grab, serial, Focus::Clear);
+                            if button == 0x110 {
+                                pointer.set_grab(self, move_grab, serial, Focus::Clear);
+                            }
+                            if button == 0x111 {
+                                pointer.set_grab(self, resize_grab, serial, Focus::Clear);
+                            }
                         };
                     } else {
                         self.space.elements().for_each(|window| {
