@@ -1,5 +1,6 @@
 #![allow(irrefutable_let_patterns)]
 
+// modules
 mod handlers;
 
 mod grabs;
@@ -7,6 +8,7 @@ mod input;
 mod state;
 mod winit;
 
+// imports
 use smithay::reexports::{calloop::EventLoop, wayland_server::Display};
 pub use state::Corrosion;
 
@@ -41,12 +43,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
         _ => {
             // TODO: Make this configurable
+            // TODO: remove this completely as this shit is just for debugging
             std::process::Command::new("kitty").spawn().expect("You may not have kitty installed, if not, please install it, or use the --command flag to specify a different terminal emulator.");
         }
     }
 
     event_loop.run(None, &mut data, move |_| {
-        // Corrosion is running
+        // corrosionWM is running
     })?;
 
     Ok(())

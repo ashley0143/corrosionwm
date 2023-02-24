@@ -33,11 +33,11 @@ pub fn init_winit(
     };
 
     let output = Output::new(
-        String::from("Corrosionwm"),
+        String::from("corrosionWM"),
         PhysicalProperties {
             size: (0, 0).into(),
             subpixel: Subpixel::Unknown,
-            make: "corrosionwm".into(),
+            make: "corrosionWM".into(),
             model: "Winit".into(),
         },
     );
