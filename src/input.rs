@@ -120,7 +120,7 @@ impl Corrosion {
                                 button,
                                 location: pointer.current_location(),
                             };
-                            
+
                             let initial_window_location =
                                 self.space.element_location(&window).unwrap();
 
@@ -137,13 +137,17 @@ impl Corrosion {
                                     };
 
                                     pointer.set_grab(self, move_grab, serial, Focus::Clear);
-                                },
+                                }
                                 0x111 => {
-                                    let resize_grab =
-                                    ResizeSurfaceGrab::start(start_data, window, edges, *initial_rect);
+                                    let resize_grab = ResizeSurfaceGrab::start(
+                                        start_data,
+                                        window,
+                                        edges,
+                                        *initial_rect,
+                                    );
                                     pointer.set_grab(self, resize_grab, serial, Focus::Clear);
-                                },
-                                _ => ()
+                                }
+                                _ => (),
                             }
                         };
                     } else {
@@ -200,5 +204,4 @@ impl Corrosion {
             _ => {}
         }
     }
-    
 }
