@@ -114,7 +114,7 @@ impl Corrosion {
                         });
 
                         // Check for compositor initiated move grab
-                        if self.seat.get_keyboard().unwrap().modifier_state().logo {
+                        if self.seat.get_keyboard().unwrap().modifier_state().alt {
                             let start_data = GrabStartData {
                                 focus: None,
                                 button,
