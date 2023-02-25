@@ -209,6 +209,7 @@ dependencies = [
  "image",
  "renderdoc",
  "smithay",
+ "tracing",
  "tracing-subscriber",
  "xcursor",
 ]

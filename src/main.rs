@@ -6,6 +6,7 @@ mod handlers;
 mod grabs;
 mod input;
 mod state;
+mod udev;
 mod winit;
 
 // imports

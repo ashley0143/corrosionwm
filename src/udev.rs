@@ -3,7 +3,7 @@
 // imports
 use std::path::PathBuf;
 
-use smithay::backend::{udev::{UdevBackend, self}, session::libseat::LibSeatSession};
+use smithay::backend::udev::{self, UdevBackend};
 
 // define the udevdata struct
 struct UdevData {
@@ -29,12 +29,12 @@ fn initialize_backend() -> std::io::Result<UdevBackend> {
 
 // implementation for the udevdata struct
 impl UdevData {
-    pub fn new() -> Self{
+    pub fn new() -> Self {
         let backend = crate::udev::initialize_backend().unwrap();
         let primary_gpu = udev::primary_gpu("seat0").unwrap().unwrap();
         UdevData {
             backend,
-            primary_gpu
+            primary_gpu,
         }
     }
     // initialize udev backend
