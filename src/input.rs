@@ -120,28 +120,30 @@ impl Corrosion {
                                 button,
                                 location: pointer.current_location(),
                             };
-
+                            
                             let initial_window_location =
                                 self.space.element_location(&window).unwrap();
 
                             let edges = ResizeEdge::all();
 
-                            let initial_rect = window.geometry();
+                            let initial_rect = &window.geometry();
 
-                            let move_grab = MoveSurfaceGrab {
-                                start_data: start_data.clone(),
-                                window: window.clone(),
-                                initial_window_location,
-                            };
+                            match button {
+                                0x110 => {
+                                    let move_grab = MoveSurfaceGrab {
+                                        start_data: start_data.clone(),
+                                        window,
+                                        initial_window_location,
+                                    };
 
-                            let resize_grab =
-                                ResizeSurfaceGrab::start(start_data, window, edges, initial_rect);
-
-                            if button == 0x110 {
-                                pointer.set_grab(self, move_grab, serial, Focus::Clear);
-                            }
-                            if button == 0x111 {
-                                pointer.set_grab(self, resize_grab, serial, Focus::Clear);
+                                    pointer.set_grab(self, move_grab, serial, Focus::Clear);
+                                },
+                                0x111 => {
+                                    let resize_grab =
+                                    ResizeSurfaceGrab::start(start_data, window, edges, *initial_rect);
+                                    pointer.set_grab(self, resize_grab, serial, Focus::Clear);
+                                },
+                                _ => ()
                             }
                         };
                     } else {
@@ -198,4 +200,5 @@ impl Corrosion {
             _ => {}
         }
     }
+    
 }
