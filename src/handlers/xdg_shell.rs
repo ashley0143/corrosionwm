@@ -65,6 +65,8 @@ impl XdgShellHandler for Corrosion {
             };
 
             pointer.set_grab(self, grab, serial, Focus::Clear);
+
+            tracing::debug!("move_request: {:?}", serial);
         }
     }
 
@@ -105,6 +107,7 @@ impl XdgShellHandler for Corrosion {
             );
 
             pointer.set_grab(self, grab, serial, Focus::Clear);
+            tracing::debug!("resize_request: {:?}", serial);
         }
     }
 

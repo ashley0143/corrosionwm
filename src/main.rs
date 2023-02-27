@@ -17,12 +17,30 @@ pub struct CalloopData {
     display: Display<Corrosion>,
 }
 
+// HACK: this is temporary just to find a term
+fn find_term() -> &'static str {
+    let terms = ["kitty", "wezterm", "urxvt", "weston-terminal"];
+    for term in terms.iter() {
+        if which::which(term).is_ok() {
+            tracing::info!("Found terminal!: {}", term);
+            return term;
+        }
+    }
+    tracing::error!("No terminal found, please install one of the following: kitty, wezterm, urxvt, weston-terminal, or use the -c flag to specify a terminal");
+    ""
+}
+
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    if let Ok(env_filter) = tracing_subscriber::EnvFilter::try_from_default_env() {
+    if let Ok(env_filter) = tracing_subscriber::EnvFilter::try_from_env("CORROSIONWM_LOG") {
+        // change this by changing the RUST_LOG environment variable
+        tracing::info!("logging initialized with env filter: {}", env_filter);
         tracing_subscriber::fmt().with_env_filter(env_filter).init();
     } else {
         tracing_subscriber::fmt().init();
+        tracing::info!("logging initialized with default filter");
     }
+    tracing::info!("logging initialized");
+    tracing::info!("Starting corrosionWM");
 
     let mut event_loop: EventLoop<CalloopData> = EventLoop::try_new()?;
 
@@ -49,10 +67,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         _ => {
             // TODO: Make this configurable
             // TODO: remove this completely as this shit is just for debugging
-            std::process::Command::new("kitty").spawn().expect("You may not have kitty installed, if not, please install it, or use the --command/-c flag to specify a different program to run.");
+            // use the find_term function to find a terminal
+            let term = find_term();
+            if term != "" {
+                std::process::Command::new(term).spawn().ok();
+            }
         }
     }
 
+    tracing::info!("Starting corrosionWM event loop");
     event_loop.run(None, &mut data, move |_| {
         // corrosionWM is running
     })?;

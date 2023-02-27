@@ -22,26 +22,30 @@ pub fn init_winit(
     event_loop: &mut EventLoop<CalloopData>,
     data: &mut CalloopData,
 ) -> Result<(), Box<dyn std::error::Error>> {
+    // This code creates the display and the state for the compositor, initializes the backend and winit, and creates an output for the compositor.
+
     let display = &mut data.display;
     let state = &mut data.state;
 
     let (mut backend, mut winit) = winit::init()?;
 
+    // This code creates a variable named mode that contains the size and refresh rate of the window.
     let mode = Mode {
         size: backend.window_size().physical_size,
         refresh: 60_000,
     };
 
     let output = Output::new(
-        String::from("corrosionWM"),
+        "corrosionWM".to_string(),
         PhysicalProperties {
             size: (0, 0).into(),
             subpixel: Subpixel::Unknown,
-            make: "corrosionWM".into(), // name of the window manager if you are running a window manager inside a window manager this might matter to you
-            model: "Winit".into(),
+            make: "corrosionWM".to_string(),
+            model: "Winit".to_string(),
         },
     );
 
+    // This code sets the output mode, the orientation, the position, and the preferred mode.
     let _global = output.create_global::<Corrosion>(&display.handle());
     output.change_current_state(
         Some(mode),
@@ -55,10 +59,12 @@ pub fn init_winit(
 
     let mut damage_tracked_renderer = DamageTrackedRenderer::from_output(&output);
 
+    // Set the environment variable WAYLAND_DISPLAY to the socket name of the display.
     std::env::set_var("WAYLAND_DISPLAY", &state.socket_name);
 
     let mut full_redraw = 0u8;
 
+    // This code creates a timer that will be used to redraw the window.
     let timer = Timer::immediate();
     event_loop
         .handle()
@@ -75,7 +81,7 @@ pub fn init_winit(
             TimeoutAction::ToDuration(Duration::from_millis(16))
         })?;
 
-    Ok(())
+    Ok(()) // Return Ok if everything went well
 }
 
 pub fn winit_dispatch(
@@ -86,9 +92,16 @@ pub fn winit_dispatch(
     damage_tracked_renderer: &mut DamageTrackedRenderer,
     full_redraw: &mut u8,
 ) -> Result<(), Box<dyn std::error::Error>> {
+    // This code dispatches new events, and if the window is closed, it stops the loop.
     let display = &mut data.display;
     let state = &mut data.state;
 
+    // The callback function passed to dispatch_new_events() is called for every new event
+    // that occurred since the last call to dispatch_new_events(). The code above
+    // handles two types of events: window resize events and input events. When a new
+    // window resize event is received, the output's current state is updated to reflect
+    // the new window size. When a new input event is received, it is passed to the
+    // state's process_input_event() function.
     let res = winit.dispatch_new_events(|event| match event {
         WinitEvent::Resized { size, .. } => {
             output.change_current_state(
@@ -100,14 +113,20 @@ pub fn winit_dispatch(
                 None,
                 None,
             );
+            tracing::debug!("Resized to {:?}", size);
         }
         WinitEvent::Input(event) => state.process_input_event(event),
         _ => (),
     });
 
+    // windowbuilder to set the windows title to "corrosionWM"
+    backend.window().set_title("corrosionWM");
+
+    // If the window is closed, stop the loop
     if let Err(WinitError::WindowClosed) = res {
         // Stop the loop
         state.loop_signal.stop();
+        tracing::info!("Window closed, stopping loop");
 
         return Ok(());
     } else {
@@ -119,6 +138,7 @@ pub fn winit_dispatch(
     let size = backend.window_size().physical_size;
     let damage = Rectangle::from_loc_and_size((0, 0), size);
 
+    // This code renders the output, submits the frame, and refreshes the space.
     backend.bind()?;
     smithay::desktop::space::render_output::<_, WaylandSurfaceRenderElement<Gles2Renderer>, _, _>(
         output,
@@ -131,6 +151,7 @@ pub fn winit_dispatch(
     )?;
     backend.submit(Some(&[damage]))?;
 
+    // This code sends the frame to the clients.
     state.space.elements().for_each(|window| {
         window.send_frame(
             output,
@@ -143,5 +164,5 @@ pub fn winit_dispatch(
     state.space.refresh();
     display.flush_clients()?;
 
-    Ok(())
+    Ok(()) // Return Ok if everything went well
 }
