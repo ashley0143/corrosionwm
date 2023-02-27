@@ -11,7 +11,11 @@ mod winit;
 
 // imports
 use smithay::reexports::{calloop::EventLoop, wayland_server::Display};
+use smithay::backend::udev::primary_gpu;
 pub use state::Corrosion;
+use tracing::{debug, info, warn};
+
+use crate::udev::initialize_backend;
 
 pub struct CalloopData {
     state: Corrosion,
@@ -20,11 +24,22 @@ pub struct CalloopData {
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     if let Ok(env_filter) = tracing_subscriber::EnvFilter::try_from_default_env() {
+        tracing::info!("env filter: {}", env_filter);
         tracing_subscriber::fmt().with_env_filter(env_filter).init();
+        tracing::info!("initialized with env filter successfully");
     } else {
         tracing_subscriber::fmt().init();
+        tracing::info!("no env filter found, using default");
     }
 
+    // a temporary test for the udev module, this will just print the gpu
+    let backend = initialize_backend().unwrap();
+    debug!("Udev backend initialized successfully!");
+    let primary_gpu = primary_gpu("seat0").unwrap().unwrap();
+    tracing::info!("Primary GPU: {:?}", primary_gpu);
+
+    // this will be temporarily commented out until I can figure out how to make this work
+    /* 
     let mut event_loop: EventLoop<CalloopData> = EventLoop::try_new()?;
 
     let mut display: Display<Corrosion> = Display::new()?;
@@ -57,6 +72,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     event_loop.run(None, &mut data, move |_| {
         // corrosionWM is running
     })?;
+
+    Ok(())
+    */
 
     Ok(())
 }
