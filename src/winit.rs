@@ -113,15 +113,20 @@ pub fn winit_dispatch(
                 None,
                 None,
             );
+            tracing::debug!("Resized to {:?}", size);
         }
         WinitEvent::Input(event) => state.process_input_event(event),
         _ => (),
     });
 
+    // windowbuilder to set the windows title to "corrosionWM"
+    backend.window().set_title("corrosionWM");
+
     // If the window is closed, stop the loop
     if let Err(WinitError::WindowClosed) = res {
         // Stop the loop
         state.loop_signal.stop();
+        tracing::info!("Window closed, stopping loop");
 
         return Ok(());
     } else {
@@ -133,6 +138,7 @@ pub fn winit_dispatch(
     let size = backend.window_size().physical_size;
     let damage = Rectangle::from_loc_and_size((0, 0), size);
 
+    // This code renders the output, submits the frame, and refreshes the space.
     backend.bind()?;
     smithay::desktop::space::render_output::<_, WaylandSurfaceRenderElement<Gles2Renderer>, _, _>(
         output,
@@ -145,6 +151,7 @@ pub fn winit_dispatch(
     )?;
     backend.submit(Some(&[damage]))?;
 
+    // This code sends the frame to the clients.
     state.space.elements().for_each(|window| {
         window.send_frame(
             output,
@@ -157,5 +164,5 @@ pub fn winit_dispatch(
     state.space.refresh();
     display.flush_clients()?;
 
-    Ok(())
+    Ok(()) // Return Ok if everything went well
 }

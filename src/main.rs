@@ -19,10 +19,15 @@ pub struct CalloopData {
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     if let Ok(env_filter) = tracing_subscriber::EnvFilter::try_from_default_env() {
+        // change this by changing the RUST_LOG environment variable
+        tracing::info!("logging initialized with env filter: {}", env_filter);
         tracing_subscriber::fmt().with_env_filter(env_filter).init();
     } else {
         tracing_subscriber::fmt().init();
+        tracing::info!("logging initialized with default filter");
     }
+    tracing::info!("logging initialized");
+    tracing::info!("Starting corrosionWM");
 
     let mut event_loop: EventLoop<CalloopData> = EventLoop::try_new()?;
 
@@ -53,6 +58,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
     }
 
+    tracing::info!("Starting corrosionWM event loop");
     event_loop.run(None, &mut data, move |_| {
         // corrosionWM is running
     })?;

@@ -1,3 +1,4 @@
+// imports
 use std::{ffi::OsString, os::unix::io::AsRawFd, sync::Arc};
 
 use smithay::{
@@ -24,6 +25,7 @@ use smithay::{
 
 use crate::CalloopData;
 
+// define the state of the compositor
 pub struct Corrosion {
     pub start_time: std::time::Instant,
     pub socket_name: OsString,
@@ -43,8 +45,19 @@ pub struct Corrosion {
     pub seat: Seat<Self>,
 }
 
+// impl the state of the compositor
 impl Corrosion {
     pub fn new(event_loop: &mut EventLoop<CalloopData>, display: &mut Display<Self>) -> Self {
+        // This code does the following:
+        // 1. Creates a display handle
+        // 2. Creates a compositor state
+        // 3. Creates an XDG shell state
+        // 4. Creates an XDG decoration state
+        // 5. Creates a shared memory state
+        // 6. Creates an output manager state
+        // 7. Creates a seat state
+        // 8. Creates a data device state
+
         let start_time = std::time::Instant::now();
 
         let dh = display.handle();
@@ -80,6 +93,7 @@ impl Corrosion {
         // Get the loop signal, used to stop the event loop
         let loop_signal = event_loop.get_signal();
 
+        // Return the state
         Self {
             start_time,
 
@@ -98,6 +112,7 @@ impl Corrosion {
         }
     }
 
+    // This function is used to initialize the wayland listener
     fn init_wayland_listener(
         display: &mut Display<Corrosion>,
         event_loop: &mut EventLoop<CalloopData>,
@@ -143,6 +158,7 @@ impl Corrosion {
         socket_name
     }
 
+    // This function is used to get the surface under the pointer
     pub fn surface_under_pointer(
         &self,
         pointer: &PointerHandle<Self>,
