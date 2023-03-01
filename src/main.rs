@@ -1,8 +1,5 @@
-#![allow(irrefutable_let_patterns)]
-
 // modules
 mod handlers;
-
 mod grabs;
 mod input;
 mod state;
@@ -30,53 +27,64 @@ fn find_term() -> &'static str {
     ""
 }
 
-fn main() -> Result<(), Box<dyn std::error::Error>> {
-    if let Ok(env_filter) = tracing_subscriber::EnvFilter::try_from_env("CORROSIONWM_LOG") {
-        // change this by changing the RUST_LOG environment variable
-        tracing::info!("logging initialized with env filter: {}", env_filter);
-        tracing_subscriber::fmt().with_env_filter(env_filter).init();
-    } else {
-        tracing_subscriber::fmt().init();
-        tracing::info!("logging initialized with default filter");
+fn init_logging() {
+    let env_filter = tracing_subscriber::EnvFilter::try_from_env("CORROSIONWM_LOG").unwrap_or_default();
+    tracing::info!("logging initialized with env filter: {}", env_filter);
+    tracing_subscriber::fmt().with_env_filter(env_filter).init();
+}
+
+fn run_command_on_startup(command: Option<String>) {
+    if let Some(command) = command {
+        std::process::Command::new(command).spawn().ok();
     }
-    tracing::info!("logging initialized");
-    tracing::info!("Starting corrosionWM");
+}
 
-    let mut event_loop: EventLoop<CalloopData> = EventLoop::try_new()?;
+fn start_terminal() {
+    let term = find_term();
+    if !term.is_empty() {
+        std::process::Command::new(term).spawn().ok();
+    }
+}
 
-    let mut display: Display<Corrosion> = Display::new()?;
-    let state = Corrosion::new(&mut event_loop, &mut display);
+fn print_help() {
+    println!("Usage: corrosionwm [OPTION]...");
+    println!("A Wayland compositor written in Rust");
+    println!("--command <command> or -c <command> to run a command on startup");
+}
 
-    let mut data = CalloopData { state, display };
-
-    crate::winit::init_winit(&mut event_loop, &mut data)?;
-
+fn parse_args() -> (Option<String>, Option<String>) {
     let mut args = std::env::args().skip(1);
     let flag = args.next();
     let arg = args.next();
+    (flag, arg)
+}
 
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    init_logging();
+    tracing::info!("Starting corrosionWM");
+
+    let mut event_loop = EventLoop::try_new()?;
+    let mut display = Display::new()?;
+    let state = Corrosion::new(&mut event_loop, &mut display);
+    let data = CalloopData { state, display };
+
+    crate::winit::init_winit(&mut event_loop, &mut data)?;
+
+    let (flag, arg) = parse_args();
     match (flag.as_deref(), arg) {
         (Some("-h") | Some("--help"), _) => {
-            println!("Usage: corrosionwm [OPTION]...");
-            println!("A Wayland compositor written in Rust");
-            println!("--command <command> or -c <command> to run a command on startup");
+            print_help();
         }
-        (Some("-c") | Some("--command"), Some(command)) => {
-            std::process::Command::new(command).spawn().ok();
+        (Some("-c") | Some("--command"), command) => {
+            run_command_on_startup(command);
         }
         _ => {
-            // TODO: Make this configurable
-            // TODO: remove this completely as this shit is just for debugging
-            // use the find_term function to find a terminal
-            let term = find_term();
-            if term != "" {
-                std::process::Command::new(term).spawn().ok();
-            }
+            start_terminal();
         }
     }
 
     tracing::info!("Starting corrosionWM event loop");
-    event_loop.run(None, &mut data, move |_| {
+    event_loop.run(None, &mut data, |_| {
         // corrosionWM is running
     })?;
 
