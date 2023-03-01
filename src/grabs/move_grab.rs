@@ -10,9 +10,9 @@ use smithay::{
 };
 
 pub struct MoveSurfaceGrab {
-    pub start_data: PointerGrabStartData<Corrosion>,
-    pub window: Window,
-    pub initial_window_location: Point<i32, Logical>,
+    start_data: PointerGrabStartData<Corrosion>,
+    window: Window,
+    initial_window_location: Point<i32, Logical>,
 }
 
 impl PointerGrab<Corrosion> for MoveSurfaceGrab {
@@ -28,8 +28,7 @@ impl PointerGrab<Corrosion> for MoveSurfaceGrab {
 
         let delta = event.location - self.start_data.location;
         let new_location = self.initial_window_location.to_f64() + delta;
-        data.space
-            .map_element(self.window.clone(), new_location.to_i32_round(), true);
+        data.space.map_element(self.window.clone(), new_location.to_i32_round(), true);
     }
 
     fn relative_motion(
